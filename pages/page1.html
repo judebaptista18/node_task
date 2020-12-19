@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div style="padding: 20px">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>No. of Transactions</th>
+              <th>Ether Value</th>
+              <th>Dollar Value</th>
+            </tr>
+          </thead>
+          <tbody id="accounts"></tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function () {
+      var settings = {
+        url: "http://localhost:3001/accounts",
+        method: "GET",
+      };
+
+      $.ajax(settings).done(function (response) {
+        let tbody = document.getElementById("accounts");
+
+        for (var j = 0; j < response.length; j++) {
+          console.log(response[j].address);
+          var val = response[j].address;
+          let tr = document.createElement("tr");
+          let td0 = document.createElement("td");
+          let td1 = document.createElement("td");
+          let td2 = document.createElement("td");
+          let td3 = document.createElement("td");
+          let btn = document.createElement("p");
+          btn.style = "cursor:pointer;color:blue";
+
+          btn.innerHTML =
+            '<a id="' + val + '" onclick="transaction(id)" >"' + val + '"</a>';
+          var cell1 = document.createTextNode(response[j].transaction_count);
+          var cell2 = document.createTextNode(response[j].ether_value);
+          var cell3 = document.createTextNode(response[j].USD);
+
+          td0.appendChild(btn);
+          td1.appendChild(cell1);
+          td2.appendChild(cell2);
+          td3.appendChild(cell3);
+
+          tr.appendChild(td0);
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tr.appendChild(td3);
+
+          tbody.appendChild(tr);
+        }
+      });
+    });
+
+    function transaction(val) {
+      localStorage.removeItem("address");
+      localStorage.setItem("address", val);
+      window.location = "http://localhost/opspl/pages/page2.html";
+    }
+  </script>
+</html>
